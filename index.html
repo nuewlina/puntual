@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimación Puntual de la Media</title>
+     <style>
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border: 2px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px;
+    margin: 20px 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 10px;
+    font-size: 2.0em;
+    font-weight: bold;
+    border-bottom: 2px dashed #000;
+    padding-bottom: 5px;
+}
+
+.description {
+    text-align: center;
+    color: #000000;
+    margin-bottom: 15px;
+    font-style: italic;
+    font-size: 1.1em;
+}
+
+.exercise-card {
+   background-color: #f9f9f9;
+    border: 2px solid #333;
+     padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.exercise-card h2 {
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+      font-size: 1.5em;
+    font-weight: bold;
+}
+
+#data-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#data-list li {
+    background-color: #333;
+    color: #fff;
+    padding: 7px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.input-area {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+        box-sizing: border-box;
+}
+
+.input-area label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #000000;
+    font-size: 1.1em;
+}
+
+#input-data {
+    padding: 10px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+        box-sizing: border-box;
+}
+
+#update-data-btn {
+   background-color: #2c3e50;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+    font-size: 1.1em;
+}
+
+#update-data-btn:hover {
+     background-color: #34495e;
+}
+
+.steps {
+    margin-top: 15px;
+}
+
+.steps ol {
+    padding-left: 15px;
+     font-size: 1.1em;
+}
+
+.steps li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: #000000;
+     font-size: 1.1em;
+}
+
+.final-result {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #000000;
+}
+
+.result-text {
+   font-weight: normal;
+    display: inline-block;
+    margin-left: 5px;
+    font-weight: bold;
+    color: #000000;
+    font-size: 1.1em;
+}
+
+.full-calculation {
+    margin-top: 20px;
+    padding: 15px;
+    border: 2px dashed #333;
+    border-radius: 8px;
+    font-size: 1.1em;
+    line-height: 1.4;
+    background-color: #f9f9f9;
+    color: #000000; /* Asegura que el texto sea negro */
+        white-space: pre-line;  /* Agregado para mantener el formato */
+}
+
+    button {
+            background-color: #101f2e; /* Azul */
+            color: white;
+            padding: 6px 8px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Azul más oscuro en hover */
+        }
+
+        button:active {
+            background-color: #003f7f; /* Azul aún más oscuro al presionar */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+         <a href="">
+             <button>Actividad 1</button>
+        </a>
+
+        <h1>Estimación Puntual de la Media</h1>
+        <p class="description">La estimación puntual es un valor único que se utiliza para aproximar un parámetro poblacional, como la media, basándose en una muestra de datos.</p>
+
+        <div class="exercise-card">
+            <h2>Ejercicio: Estimación de la Media</h2>
+            <p>Supongamos que tenemos datos de tiempo (en minutos) que tardó un equipo en completar una tarea. Los datos son:</p>
+            <ul id="data-list"></ul>
+
+            <div class="input-area">
+                <label for="input-data"><strong>Edita los valores de la muestra:</strong></label>
+                <input type="text" id="input-data" placeholder="Ej: 15, 18, 14" pattern="^[0-9,\.]+$" title="Solo números, coma y punto decimal" required>
+                <button id="update-data-btn">Actualizar</button>
+            </div>
+
+            <div class="steps">
+                <h3>Procedimiento:</h3>
+                <ol>
+                    <li>Sumar todos los datos de la muestra: <span id="suma-muestra" class="result-text"></span></li>
+                    <li>Dividir la suma entre el número de datos en la muestra: <span id="media-muestra" class="result-text"></span></li>
+                </ol>
+                <p class="final-result">La estimación puntual es: <span id="media-result" class="result-text"></span> minutos.</p>
+            </div>
+        </div>
+        <div id="full-calculation" class="full-calculation"></div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const dataList = document.getElementById('data-list');
+    const inputData = document.getElementById('input-data');
+    const updateDataBtn = document.getElementById('update-data-btn');
+    const sumaMuestra = document.getElementById('suma-muestra');
+    const mediaMuestra = document.getElementById('media-muestra');
+    const mediaResult = document.getElementById('media-result');
+     const fullCalculationDiv = document.getElementById('full-calculation');
+
+    let data = [];
+
+    function updateDisplay() {
+        dataList.innerHTML = '';
+        if (data.length === 0) {
+            sumaMuestra.textContent = '';
+            mediaMuestra.textContent = '';
+            mediaResult.textContent = '';
+            fullCalculationDiv.textContent = '';
+            return;
+        }
+        
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          dataList.appendChild(li);
+      });
+
+       const sum = data.reduce((acc, val) => acc + val, 0);
+        sumaMuestra.textContent = `Σ = ${sum}`;
+        const mean = sum / data.length;
+      mediaMuestra.textContent = `X̄ = ${mean}`;
+      mediaResult.textContent = `${mean.toFixed(2)}`;
+
+      // Mostrar el proceso completo
+       fullCalculationDiv.textContent = `Datos de la muestra: {${data.join(', ')}}
+Sumar todos los datos (Σ): ${data.join(' + ')} = ${sum}
+Dividir la suma entre el número de datos (X̄): ${sum} / ${data.length} = ${mean.toFixed(2)}
+Estimación puntual de la media: ${mean.toFixed(2)} minutos
+`;
+
+
+    }
+
+    updateDataBtn.addEventListener('click', () => {
+        const inputValues = inputData.value.trim();
+        if (inputValues) {
+           data = inputValues.split(',').map(Number).filter(Number.isFinite);
+          if (data.length === 0) {
+              alert('Ingresa números válidos separados por comas.');
+              return;
+          }
+           updateDisplay();
+        }else{
+          alert('Ingresa números válidos separados por comas.');
+        }
+    });
+});
+
+const inputData = document.getElementById('input-data');
+inputData.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9,\.]/g, '');
+});
+</script>
+</html>
